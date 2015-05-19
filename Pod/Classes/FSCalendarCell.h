@@ -28,6 +28,8 @@
 
 @property (assign, nonatomic) FSCalendarCellStyle cellStyle;
 @property (assign, nonatomic) BOOL                hasEvent;
+@property (assign, nonatomic) BOOL                alwaysShowBackground;
+@property (assign, nonatomic) BOOL                isDisabled;
 
 @property (readonly, getter = isPlaceholder)      BOOL placeholder;
 

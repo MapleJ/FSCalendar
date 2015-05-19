@@ -232,18 +232,20 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     FSCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    cell.titleColors        = self.titleColors;
-    cell.subtitleColors     = self.subtitleColors;
-    cell.backgroundColors   = self.backgroundColors;
-    cell.eventColor         = self.eventColor;
-    cell.cellStyle          = self.cellStyle;
-    cell.month              = [_minimumDate fs_dateByAddingMonths:indexPath.section];
-    cell.currentDate        = self.currentDate;
-    cell.titleLabel.font    = _titleFont;
-    cell.subtitleLabel.font = _subtitleFont;
-    cell.date               = [self dateForIndexPath:indexPath];
-    cell.subtitle           = [self subtitleForDate:cell.date];
-    cell.hasEvent           = [self hasEventForDate:cell.date];
+    cell.titleColors          = self.titleColors;
+    cell.subtitleColors       = self.subtitleColors;
+    cell.backgroundColors     = self.backgroundColors;
+    cell.eventColor           = self.eventColor;
+    cell.cellStyle            = self.cellStyle;
+    cell.alwaysShowBackground = self.alwaysShowBackground;
+    cell.month                = [_minimumDate fs_dateByAddingMonths:indexPath.section];
+    cell.currentDate          = self.currentDate;
+    cell.titleLabel.font      = _titleFont;
+    cell.subtitleLabel.font   = _subtitleFont;
+    cell.date                 = [self dateForIndexPath:indexPath];
+    cell.subtitle             = [self subtitleForDate:cell.date];
+    cell.hasEvent             = [self hasEventForDate:cell.date];
+    cell.isDisabled           = [self isDisabledForDate:cell.date];
     [cell configureCell];
     return cell;
 }
@@ -589,6 +591,20 @@
     return _subtitleColors[@(FSCalendarCellStateWeekend)];
 }
 
+- (void)setDefaultColor:(UIColor *)color
+{
+    if (color) {
+        _backgroundColors[@(FSCalendarCellStateNormal)] = color;
+    } else {
+        [_backgroundColors removeObjectForKey:@(FSCalendarCellStateNormal)];
+    }
+    [self reloadData];
+}
+
+- (UIColor *)defaultColor {
+    return _backgroundColors[@(FSCalendarCellStateNormal)];
+}
+
 - (void)setSelectionColor:(UIColor *)color
 {
     if (color) {
@@ -617,6 +633,36 @@
 - (UIColor *)todayColor
 {
     return _backgroundColors[@(FSCalendarCellStateToday)];
+}
+
+- (void)setPlaceholderColor:(UIColor *)color
+{
+    if (color) {
+        _backgroundColors[@(FSCalendarCellStatePlaceholder)] = color;
+    } else {
+        [_backgroundColors removeObjectForKey:@(FSCalendarCellStatePlaceholder)];
+    }
+    [self reloadData];
+}
+
+- (UIColor *)placeholderColor
+{
+    return _backgroundColors[@(FSCalendarCellStatePlaceholder)];
+}
+
+- (void)setWeekendColor:(UIColor *)color
+{
+    if (color) {
+        _backgroundColors[@(FSCalendarCellStateWeekend)] = color;
+    } else {
+        [_backgroundColors removeObjectForKey:@(FSCalendarCellStateWeekend)];
+    }
+    [self reloadData];
+}
+
+- (UIColor *)weekendColor
+{
+    return _backgroundColors[@(FSCalendarCellStateWeekend)];
 }
 
 - (void)setEventColor:(UIColor *)eventColor
@@ -806,6 +852,13 @@
 }
 
 #pragma mark - DataSource
+- (BOOL)isDisabledForDate:(NSDate *)date
+{
+    if (_dataSource && [_dataSource respondsToSelector:@selector(calendar:isDisabledForDate:)]) {
+        return [_delegate calendar:self isDisabledForDate:date];
+    }
+    return NO;
+}
 
 - (NSString *)subtitleForDate:(NSDate *)date
 {

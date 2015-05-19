@@ -38,6 +38,7 @@ typedef NS_OPTIONS(NSInteger, FSCalendarCellState) {
 
 @optional
 - (BOOL)calendar:(FSCalendar *)calendar shouldSelectDate:(NSDate *)date;
+- (BOOL)calendar:(FSCalendar *)calendar isDisabledForDate:(NSDate *)date;
 - (void)calendar:(FSCalendar *)calendar didSelectDate:(NSDate *)date;
 - (void)calendarCurrentMonthDidChange:(FSCalendar *)calendar;
 
@@ -67,6 +68,7 @@ typedef NS_OPTIONS(NSInteger, FSCalendarCellState) {
 @property (assign, nonatomic) FSCalendarFlow       flow;
 @property (assign, nonatomic) IBInspectable NSUInteger           firstWeekday;
 @property (assign, nonatomic) IBInspectable BOOL                 autoAdjustTitleSize;
+@property (assign, nonatomic) IBInspectable BOOL                 alwaysShowBackground;
 
 @property (assign, nonatomic) IBInspectable CGFloat              minDissolvedAlpha UI_APPEARANCE_SELECTOR;
 @property (assign, nonatomic) FSCalendarCellStyle cellStyle      UI_APPEARANCE_SELECTOR;
@@ -93,8 +95,11 @@ typedef NS_OPTIONS(NSInteger, FSCalendarCellState) {
 @property (strong, nonatomic) UIColor  *subtitlePlaceholderColor UI_APPEARANCE_SELECTOR;
 @property (strong, nonatomic) UIColor  *subtitleWeekendColor     UI_APPEARANCE_SELECTOR;
 
+@property (strong, nonatomic) UIColor  *defaultColor             UI_APPEARANCE_SELECTOR;
 @property (strong, nonatomic) UIColor  *selectionColor           UI_APPEARANCE_SELECTOR;
 @property (strong, nonatomic) UIColor  *todayColor               UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIColor  *placeholderColor         UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIColor  *weekendColor             UI_APPEARANCE_SELECTOR;
 
 - (void)reloadData;
 
